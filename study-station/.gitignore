@@ -44,3 +44,5 @@ build/
 a.out
 study_station
 *.tmp
+
+compile.txt
