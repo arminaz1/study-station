@@ -44,3 +44,8 @@ build/
 a.out
 study_station
 *.tmp
+
+compile.txt
+study_app
+study_app.exe
+study-station/
