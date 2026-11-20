@@ -5,7 +5,7 @@
 class Activity{
   public:
     static std::optional<Activity> create(std::string name);
-    std::string  get_activity_name();
+    const std::string& get_activity_name() const;
     
   private:
     std::string m_name;

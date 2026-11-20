@@ -1,7 +1,9 @@
 #include <string>
 #include <optional>
 #include "activity.hpp"
-std::string Activity::get_activity_name(){return m_name;}
+const std::string& Activity::get_activity_name() const{
+  return m_name;
+}
 
 Activity::Activity(std::string name) : m_name{name} {}
 
