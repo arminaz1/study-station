@@ -37,9 +37,9 @@ int main() {
     check(reading_session.has_value(), "T3: session created");
     if (reading_session.has_value()) {
         check(reading_session.value().get_session_activity() == "Reading",
-            "T3: activity name is \"Reading\"");
+            "T3 & T8: activity name is \"Reading\"");
         check(reading_session.value().duration_seconds() == 1500,
-              "T3: duration is 1500");
+              "T3 & T8: duration is 1500");
     }
 
     // T4: start equal to end is accepted, duration is 0
@@ -57,6 +57,31 @@ int main() {
     std::optional<Session> bad_session = Session::create(&writing.value(), 900, 600);
     check(!bad_session.has_value(), "T5: start 900 after end 600 is rejected");
 
+    std::optional<Session> bad_session2 = Session::create(&writing.value(), -1, 10);
+    check(!bad_session2.has_value(), "T6: start -1 after end 600 is rejected");
+
+    std::optional<Session> start_end_zero_duration_session = Session::create(&writing.value(), 0, 0);
+        if (start_end_zero_duration_session.has_value()) {
+            check(start_end_zero_duration_session.value().duration_seconds() == 0, "T7: Session with start and end at 0 has value duration 0");
+        }
+  
+
+    std::optional<Session> one_day_Reading_session = Session::create(&reading.value(), 0, 86400);
+    check(one_day_Reading_session.has_value(), "T8: one-day Reading session created");
+    if (one_day_Reading_session.has_value()) {
+        check(one_day_Reading_session.value().get_session_activity() == "Reading",
+            "T9: activity name is \"Reading\"");
+        check(one_day_Reading_session.value().duration_seconds() == 86400,
+              "T9: duration is 86400");
+    }
+    
+    
     std::cout << "failures: " << failures << "\n";
+    if (failures == 0) {
+        std::cout << "\t\t\tAll tests passed!\n";
+        std::cout << "verify that -> T10 | Run T1 to T9 under sanitizer build executed with no sanitizer output\n";
+    } else {
+        std::cout << failures << " test(s) failed.\n";
+    }
     return failures == 0 ? 0 : 1;
 }
