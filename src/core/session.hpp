@@ -3,6 +3,7 @@
 #pragma once 
 #include <optional>
 #include "activity.hpp"
+#include <string> 
 
 class Session{
   public:

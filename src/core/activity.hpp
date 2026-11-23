@@ -2,6 +2,7 @@
 #pragma once 
 #include <string>
 #include <optional>
+
 class Activity{
   public:
     static std::optional<Activity> create(std::string name);
