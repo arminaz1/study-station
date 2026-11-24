@@ -10,7 +10,6 @@ int main(){
   long long start_time{};
   long long end_time{};
   
-  
   std::cout << "Enter activity name: ";
   getline(std::cin, activity_name);
 

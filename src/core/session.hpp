@@ -10,6 +10,8 @@ class Session{
     static std::optional<Session> create(const Activity* activity, long long start_time, long long end_time);
     long long duration_seconds() const;
     const std::string& get_session_activity() const;
+    long long get_start_time_seconds() const;
+    long long get_end_time_seconds() const;
   private:
     Session(const Activity* activity, long long start_time, long long end_time);
     const Activity* m_activity;

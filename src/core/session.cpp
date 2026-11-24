@@ -14,6 +14,14 @@ long long Session:: duration_seconds() const{
   return m_end_time - m_start_time;
 }
 
+long long Session::get_start_time_seconds() const{
+  return m_start_time;
+}
+
+long long Session::get_end_time_seconds() const{
+  return m_end_time;
+}
+
 std::optional<Session> Session::create(const Activity* activity, long long start_time, long long end_time){
   if(start_time > end_time || start_time < 0){
     return std::nullopt;
