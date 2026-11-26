@@ -77,10 +77,6 @@ std::optional<Session> line_to_session(const std::string& line, std::deque<Activ
 }
 
 
-
-
-
-
 std::string session_to_line(const Session& session){
 		return session.get_session_activity() + "," + std::to_string(session.get_start_time_seconds()) + "," + std::to_string(session.get_end_time_seconds());
 }
