@@ -226,7 +226,7 @@ int main() {
             bool t2_12_result = test_T2_3_7(invalid_lines_12, new_list_of_activities);
             if(new_list_of_activities.size() != size_deq){
                 std::cout << "debug: activities deque size changed after test for T2-12\n";
-                t2_12 = false;
+                t2_12_result = false;
                 ++failures;
             }
             t2_12 = t2_12_result;
