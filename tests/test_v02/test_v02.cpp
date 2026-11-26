@@ -156,32 +156,85 @@ int main() {
     std::deque<Activity> with_activity;
     with_activity.push_back(Activity::create("Reading").value());
     bool t2_1_existing = test_T2_1("Reading,0,1500", with_activity);
-    std::cout << "T2-1 (Activity exists): " << (t2_1_existing ? "PASS" : "FAIL") << "\n";
+    std::cout << "T2-1 (Activity exists): " << (t2_1_existing ? "\tPASS" : "\tFAIL") << "\n";
     if (!t2_1_existing) ++failures;
 
     // T2-1: valid line, no Activity in the deque yet
     std::deque<Activity> without_activity;
     bool t2_1_new = test_T2_1("Reading,0,1500", without_activity);
-    std::cout << "T2-1 (Activity is new): " << (t2_1_new ? "PASS" : "FAIL") << "\n";
+    std::cout << "T2-1 (Activity is new): " << (t2_1_new ? "\tPASS" : "\tFAIL") << "\n";
     if (!t2_1_new) ++failures;
 
     // T2-2: session_to_line
     std::optional<Activity> reading = Activity::create("Reading");
     std::optional<Session> session = Session::create(&reading.value(), 0, 1500);
     bool t2_2 = test_T2_2(session.value());
-    std::cout << "T2-2: " << (t2_2 ? "PASS" : "FAIL") << "\n";
+    std::cout << "T2-2: " << (t2_2 ? "\t\t\t\tPASS" : "\t\t\t\tFAIL") << "\n";
     if (!t2_2) ++failures;
 
-    // T2-3 to T2-7: invalid lines, each with a fresh deque
-    const std::string invalid_lines[] = {"Reading,0,", "Reading,abc,10", ",0,10", "Reading,900,600", "Reading,-1,10"};
-    const char* invalid_ids[] = {"T2-3", "T2-4", "T2-5", "T2-6", "T2-7"};
-    for (int i = 0; i < 5; ++i) {
+    // T2-3 to T2-8: invalid lines, each with a fresh deque
+    const std::string invalid_lines[] = {"Reading,0,", "Reading,abc,10", ",0,10", "Reading,900,600", "Reading,-1,10", "Reading,12abc,10"};
+    const char* invalid_ids[] = {"T2-3", "T2-4", "T2-5", "T2-6 & T2-11", "T2-7", "T2-8"};
+    for (int i = 0; i < 6; ++i) {
         std::deque<Activity> activities;
         bool passed = test_T2_3_7(invalid_lines[i], activities);
-        std::cout << invalid_ids[i] << ": " << (passed ? "PASS" : "FAIL") << "\n";
+        if (activities.size() != 0) {
+            std::cout << "debug: activities deque is not empty after test for " << invalid_ids[i] << "\n";
+            passed = false;
+        } 
+        if(i == 3){std::cout << invalid_ids[i] << ": " << (passed ? "\t\t\tPASS" : "\t\t\tFAIL") << "\n";}else{       
+        std::cout << invalid_ids[i] << ": " << (passed ? "\t\t\t\tPASS" : "\t\t\t\tFAIL") << "\n";}
         if (!passed) ++failures;
     }
+    //T9: Activity with a comma in its name
+    bool t2_9 = false;
+    std::optional<Activity> two_activities = Activity::create("Reading, Writing");
+    if (two_activities.has_value()) {
+          std::cout << two_activities.value().get_activity_name() << "\n";
+          t2_9 = false;
+          ++failures;
+        }
+    else{
+          t2_9 = true;
+        }
 
-    std::cout << (failures == 0 ? "All T2-1 to T2-7 passed\n" : "Some tests failed\n");
+    std::cout << "T2-9: " << (t2_9 ? "\t\t\t\tPASS" : "\t\t\t\tFAIL") << "\n";
+
+    //T10: Activity with a newline in its name
+    bool t2_10 = false;
+    std::optional<Activity> break_line_activities = Activity::create("Math\nAlgebra");
+    if (break_line_activities.has_value()) {
+          std::cout << break_line_activities.value().get_activity_name() << "\n";
+          t2_10 = false;
+          ++failures;
+        }
+    else{
+          t2_10 = true;
+        }
+    std::cout << "T2-10: " << (t2_10 ? "\t\t\t\tPASS" : "\t\t\t\tFAIL") << "\n";  
+    
+    bool t2_12= false;
+    std::deque<Activity> new_list_of_activities;
+    std::optional<Activity> reading_activity = Activity::create("Reading");
+    new_list_of_activities.push_back(reading_activity.value());
+
+
+    if(new_list_of_activities.size() != 0){
+        size_t size_deq = new_list_of_activities.size();
+        if(new_list_of_activities.back().get_activity_name() == reading_activity.value().get_activity_name()){
+            const std::string& invalid_lines_12 = "Reading,900,600";
+            bool t2_12_result = test_T2_3_7(invalid_lines_12, new_list_of_activities);
+            if(new_list_of_activities.size() != size_deq){
+                std::cout << "debug: activities deque size changed after test for T2-12\n";
+                t2_12 = false;
+                ++failures;
+            }
+            t2_12 = t2_12_result;
+          }
+    }
+    std::cout << "T2-12: " << (t2_12 ? "\t\t\t\tPASS" : "\t\t\t\tFAIL") << "\n";
+    //
+
+    std::cout << (failures == 0 ? "All T2-1 to T2-12 \t\tPASSED\n" : "Some tests \t\tFAILED\n");
     return failures == 0 ? 0 : 1;
 }
